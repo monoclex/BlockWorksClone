@@ -3,6 +3,14 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# PlayerIOClient dev
+Player.IO Development Server.exe
+Player.IO GameLibrary.dll
+Player.IO GameLibrary.xml
+
+# make sure no credentials get leaked ;)
+*.playeriodb
+
 # User-specific files
 *.suo
 *.user
