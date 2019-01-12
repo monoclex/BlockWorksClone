@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BlockWorks.Server.DevStart {
-	class Program {
-		static void Main(string[] args) {
-
+namespace BlockWorks.Server.DevStart
+{
+	internal class Program
+	{
+		private static void Main(string[] args)
+		{
 			// change
 			// a.multiplayer.useSecureConnections = !0;
 			// in BlockWorksClient.js to

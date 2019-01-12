@@ -1,29 +1,32 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Net;
-using System.IO;
-using HtmlAgilityPack;
-using System.Linq;
+﻿using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
-using System.Web;
+using System.IO;
+using System.Linq;
+using System.Net;
 using System.Text;
+using System.Threading.Tasks;
+using System.Web;
 
-namespace BlockWorks.ClientCloner {
-	public enum CleanType {
+namespace BlockWorks.ClientCloner
+{
+	public enum CleanType
+	{
 		Html = 0,
 		Css = 1,
 		Js = 2
 	}
 
-	class Program {
-
+	internal class Program
+	{
 		public const string BlockWorksURL = "https://blockworks.lightwolfstudios.com/game";
 		public const string BeautifierURL = "[REDACTED]";
 
-		static void Main()
+		private static void Main()
 			=> new Program().MainAsync().GetAwaiter().GetResult();
 
-		public async Task MainAsync() {
+		public async Task MainAsync()
+		{
 			Console.WriteLine("");
 			Console.WriteLine("Once the crawling is completed, you will NOT be able to open 'index.html' and have everything work. You MUST have an HTTP server to use it with.");
 			Console.WriteLine("\tMongoose works pretty good in my case - https://cesanta.com/binary.html");
@@ -36,7 +39,10 @@ namespace BlockWorks.ClientCloner {
 			Console.WriteLine($"Done crawling!");
 		}
 
-		public async Task CrawlHtml(string baseUrl, string html) {
+		//TODO: refactor these crawls into their own classes or something
+
+		public async Task CrawlHtml(string baseUrl, string html)
+		{
 			var url = $"{baseUrl}/{html}";
 
 			Console.WriteLine($"Crawling HTML {url}");
@@ -53,7 +59,8 @@ namespace BlockWorks.ClientCloner {
 
 			var crawlTasks = new List<Task>();
 
-			foreach (var i in scripts) {
+			foreach (var i in scripts)
+			{
 				var scriptSrc = i.Attributes["src"].Value;
 
 				crawlTasks.Add(CrawlJs(baseUrl, scriptSrc));
@@ -63,7 +70,8 @@ namespace BlockWorks.ClientCloner {
 			await clean;
 		}
 
-		public async Task CrawlJs(string baseUrl, string js) {
+		public async Task CrawlJs(string baseUrl, string js)
+		{
 			var url = $"{baseUrl}/{js}";
 
 			Console.WriteLine($"Crawling JS {url}");
@@ -88,7 +96,8 @@ namespace BlockWorks.ClientCloner {
 			await clean;
 		}
 
-		public async Task CrawlCss(string baseUrl, string css) {
+		public async Task CrawlCss(string baseUrl, string css)
+		{
 			var url = $"{baseUrl}/{css}";
 
 			Console.WriteLine($"Crawling CSS {url}");
@@ -109,7 +118,8 @@ namespace BlockWorks.ClientCloner {
 			await clean;
 		}
 
-		public async Task CrawlMisc(string baseUrl, string end) {
+		public async Task CrawlMisc(string baseUrl, string end)
+		{
 			var url = $"{baseUrl}/{end}";
 
 			Console.WriteLine($"Crawling MISC {url}");
@@ -120,7 +130,8 @@ namespace BlockWorks.ClientCloner {
 			await Save(data, end);
 		}
 
-		public async Task<MemoryStream> Copy(MemoryStream main) {
+		public async Task<MemoryStream> Copy(MemoryStream main)
+		{
 			var ms = new MemoryStream();
 			main.Seek(0, SeekOrigin.Begin);
 			await main.CopyToAsync(ms);
@@ -129,20 +140,25 @@ namespace BlockWorks.ClientCloner {
 			return ms;
 		}
 
-		public async Task Clean(MemoryStream data, CleanType clean, string relUrl) {
+		public async Task Clean(MemoryStream data, CleanType clean, string relUrl)
+		{
 			var postData = $"src={HttpUtility.UrlEncode(data.ToArray())}" +
 							$"&clean={HttpUtility.UrlEncode(((int)clean).ToString())}";
 
-			try {
+			try
+			{
 				await Save(await Post(BeautifierURL, postData), relUrl);
-			} catch (Exception ex) {
+			}
+			catch (Exception ex)
+			{
 				Console.WriteLine($"Unable to clean {relUrl} (maybe the service is down) \n\t{ex.Message} - {ex.StackTrace}");
 
 				await Save(data, relUrl);
 			}
 		}
 
-		public async Task Save(MemoryStream ms, string relUrl) {
+		public async Task Save(MemoryStream ms, string relUrl)
+		{
 			var file = $"BlockWorksClientClone/{relUrl}";
 
 			var fullPath = Path.GetFullPath(file);
@@ -154,16 +170,17 @@ namespace BlockWorks.ClientCloner {
 			using (var fs = File.OpenWrite(fullPath))
 				await ms.CopyToAsync(fs);
 		}
-		
 
-		private Task<IEnumerable<string>> AwkwardParse(string input, string begin, string end, char splitBy) {
+		private Task<IEnumerable<string>> AwkwardParse(string input, string begin, string end, char splitBy)
+		{
 			var data = input.Split(begin);
 			for (int i = 1; i < data.Length; i++)
 				data[i] = begin + data[i].Split(end)[0] + end;
 
 			var res = new List<string>();
 
-			foreach (var i in data) {
+			foreach (var i in data)
+			{
 				if (i.Contains(begin))
 					res.AddRange(GetUrls(i, splitBy));
 			}
@@ -171,7 +188,8 @@ namespace BlockWorks.ClientCloner {
 			return Task.FromResult<IEnumerable<string>>(res);
 		}
 
-		private async Task<MemoryStream> Post(string url, string postdata) {
+		private async Task<MemoryStream> Post(string url, string postdata)
+		{
 			var wr = HttpWebRequest.CreateHttp(url);
 
 			wr.Method = "POST";
@@ -184,7 +202,8 @@ namespace BlockWorks.ClientCloner {
 
 			wr.Timeout = 20_000;
 
-			using (var stream = wr.GetRequestStream()) {
+			using (var stream = wr.GetRequestStream())
+			{
 				var byteData = Encoding.ASCII.GetBytes(postdata);
 				await stream.WriteAsync(byteData, 0, postdata.Length);
 			}
@@ -201,7 +220,8 @@ namespace BlockWorks.ClientCloner {
 			return ms;
 		}
 
-		private async Task<MemoryStream> Get(string url) {
+		private async Task<MemoryStream> Get(string url)
+		{
 			var wr = HttpWebRequest.CreateHttp(url);
 
 			wr.Method = "GET";
@@ -211,7 +231,7 @@ namespace BlockWorks.ClientCloner {
 				DecompressionMethods.Deflate;
 
 			var ms = new MemoryStream();
-			
+
 			using (var r = await wr.GetResponseAsync())
 			using (var s = r.GetResponseStream())
 				await s.CopyToAsync(ms);
@@ -221,7 +241,8 @@ namespace BlockWorks.ClientCloner {
 			return ms;
 		}
 
-		private string[] GetUrls(string s, char splitChar) {
+		private string[] GetUrls(string s, char splitChar)
+		{
 			var spl = s.Split(splitChar);
 			var er = new string[(spl.Length - 1) / 2];
 

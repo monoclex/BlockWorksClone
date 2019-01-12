@@ -22,6 +22,8 @@ app.get('/', function(req, res) {
 
 app.post('/', function(req, res) {
 	console.log('Recieved POST request');
+	if (req.body.clean == 0)
+		res.send(clean_html(req.body.src));
 	else if (req.body.clean == 1)
 		res.send(clean_css(req.body.src));
 	else if (req.body.clean == 2)
