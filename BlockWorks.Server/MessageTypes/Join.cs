@@ -32,8 +32,6 @@ namespace BlockWorks.Server.MessageTypes
 			return Message.Create(You ? TypeYou : TypeJoin, PlayerId, AccountId, Username, AvatarId, StaffRank, X, Y);
 		}
 
-		public bool Unpack(Message e) =>
-			// should never need to convert back
-			false;
+		public bool Unpack(Message e) => false;
 	}
 }

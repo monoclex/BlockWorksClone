@@ -15,6 +15,6 @@ namespace BlockWorks.Server.MessageTypes
 		Sending = 0,
 
 		// if the server is recieving it
-		Recieving = 1,
+		Recieving = 1
 	}
 }

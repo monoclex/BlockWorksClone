@@ -20,14 +20,15 @@ namespace BlockWorks.Server.MessageTypes
 
 				return true;
 			}
-			else return false;
+
+			return false;
 		}
 
 		public Message Pack(Target pet)
 		{
-			return pet == Target.Sending ?
-						Message.Create(Fly.Type, Id, FlyState)
-						: Message.Create(Fly.Type, FlyState);
+			return pet == Target.Sending
+				? Message.Create(Type, Id, FlyState)
+				: Message.Create(Type, FlyState);
 		}
 	}
 }

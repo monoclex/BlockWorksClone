@@ -1,9 +1,4 @@
 ﻿using PlayerIO.GameLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlockWorks.Server
 {
@@ -18,6 +13,8 @@ namespace BlockWorks.Server
 
 	public class World
 	{
+		private readonly WorldBlock[][] _blocks;
+
 		public World(uint width, uint height, WorldColor color)
 		{
 			Width = width;
@@ -30,11 +27,9 @@ namespace BlockWorks.Server
 			for (var x = 0; x < width; x++)
 			{
 				_blocks[x] = new WorldBlock[height];
-				for(var y = 0; y < height; y++)
+				for (var y = 0; y < height; y++)
 				{
 					var b = new WorldBlock();
-
-
 
 					_blocks[x][y] = b;
 				}
@@ -44,8 +39,6 @@ namespace BlockWorks.Server
 		public WorldColor Color { get; }
 		public uint Width { get; }
 		public uint Height { get; }
-
-		private WorldBlock[][] _blocks;
 
 		public Message Serialize()
 		{
@@ -74,10 +67,7 @@ namespace BlockWorks.Server
 			return false;
 		}
 
-		public WorldBlock GetBlock(uint x, uint y)
-		{
-			return _blocks[x][y];
-		}
+		public WorldBlock GetBlock(uint x, uint y) => _blocks[x][y];
 
 		public bool TrySetBlock(uint x, uint y, WorldBlock block)
 		{
@@ -93,15 +83,13 @@ namespace BlockWorks.Server
 			return false;
 		}
 
-		public void SetBlock(uint x, uint y, WorldBlock block)
-		{
-			_blocks[x][y] = block;
-		}
+		public void SetBlock(uint x, uint y, WorldBlock block) => _blocks[x][y] = block;
 	}
 
 	public enum Id
 	{
-		Air, Gray
+		Air,
+		Gray
 	}
 
 	public struct WorldBlock

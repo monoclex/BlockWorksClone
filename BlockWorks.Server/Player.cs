@@ -19,12 +19,12 @@ namespace BlockWorks.Server
 			}
 		}
 
-		public void Send(IMessage msg)
-			=> Send(msg.Pack(Target.Sending));
+		public void Send(IMessage msg) => Send(msg.Pack(Target.Sending));
 
 		public Join GetJoin(bool isYou)
 		{
-			return new Join {
+			return new Join
+			{
 				You = isYou,
 				PlayerId = Id,
 				AccountId = Username,

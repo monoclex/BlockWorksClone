@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PlayerIO.GameLibrary;
+﻿using PlayerIO.GameLibrary;
 
 namespace BlockWorks.Server.MessageTypes
 {
@@ -31,9 +26,9 @@ namespace BlockWorks.Server.MessageTypes
 
 		public Message Pack(Target pet)
 		{
-			return pet == Target.Sending ?
-						Message.Create("b", Id, Position, ModifierIdk)
-						: Message.Create("b", Position, ModifierIdk);
+			return pet == Target.Sending
+				? Message.Create("b", Id, Position, ModifierIdk)
+				: Message.Create("b", Position, ModifierIdk);
 		}
 
 		public bool Unpack(Message e)

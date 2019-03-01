@@ -1,17 +1,23 @@
-﻿using System;
+﻿using PlayerIOClient;
+
+using System;
+using System.Collections.Generic;
 
 namespace BlockWorksBotConnection
 {
-	class Program
+	internal class Program
 	{
-		static void Main(string[] args)
+		private static void Main(string[] args)
 		{
-			var cli = PlayerIOClient.PlayerIO.Authenticate("blockworks-frdrlhtjneoipehnx9tmg", "public", new System.Collections.Generic.Dictionary<string, string> {
-				{ "userId", "guest" },
+			var cli = PlayerIO.Authenticate("blockworks-frdrlhtjneoipehnx9tmg", "public", new Dictionary<string, string>
+			{
+				{"userId", "guest"}
 			}, null);
-			var con = cli.Multiplayer.CreateJoinRoom("OW_Gray-1", "Simple-1", false, null, new System.Collections.Generic.Dictionary<string, string> {
-				{ "Username", "" }
-			});
+			var con = cli.Multiplayer.CreateJoinRoom("OW_Gray-1", "Simple-1", false, null,
+				new Dictionary<string, string>
+				{
+					{"Username", ""}
+				});
 
 			con.OnMessage += Con_OnMessage;
 			con.OnDisconnect += Con_OnDisconnect;
@@ -22,10 +28,9 @@ namespace BlockWorksBotConnection
 
 		private static void Con_OnDisconnect(object sender, string message) => Console.WriteLine(message);
 
-		private static void Con_OnMessage(object sender, PlayerIOClient.Message e)
+		private static void Con_OnMessage(object sender, Message e)
 		{
-			var con = (PlayerIOClient.Connection)sender;
-
+			var con = (Connection)sender;
 		}
 	}
 }

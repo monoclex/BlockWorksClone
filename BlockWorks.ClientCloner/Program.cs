@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,13 +23,13 @@ namespace BlockWorks.ClientCloner
 		public const string BlockWorksURL = "https://blockworks.lightwolfstudios.com/game";
 		public const string BeautifierURL = "[REDACTED]";
 
-		private static void Main()
-			=> new Program().MainAsync().GetAwaiter().GetResult();
+		private static void Main() => new Program().MainAsync().GetAwaiter().GetResult();
 
 		public async Task MainAsync()
 		{
 			Console.WriteLine("");
-			Console.WriteLine("Once the crawling is completed, you will NOT be able to open 'index.html' and have everything work. You MUST have an HTTP server to use it with.");
+			Console.WriteLine(
+				"Once the crawling is completed, you will NOT be able to open 'index.html' and have everything work. You MUST have an HTTP server to use it with.");
 			Console.WriteLine("\tMongoose works pretty good in my case - https://cesanta.com/binary.html");
 			Console.WriteLine("For you linux users, just install nginx and host it via that.");
 			Console.WriteLine("");
@@ -36,7 +37,7 @@ namespace BlockWorks.ClientCloner
 			Console.WriteLine("");
 
 			await CrawlHtml(BlockWorksURL, "index.html");
-			Console.WriteLine($"Done crawling!");
+			Console.WriteLine("Done crawling!");
 		}
 
 		//TODO: refactor these crawls into their own classes or something
@@ -55,7 +56,7 @@ namespace BlockWorks.ClientCloner
 			doc.Load(ms);
 
 			var scripts = doc.DocumentNode.Descendants()
-							.Where(x => x.Name == "script");
+				.Where(x => x.Name == "script");
 
 			var crawlTasks = new List<Task>();
 
@@ -143,7 +144,7 @@ namespace BlockWorks.ClientCloner
 		public async Task Clean(MemoryStream data, CleanType clean, string relUrl)
 		{
 			var postData = $"src={HttpUtility.UrlEncode(data.ToArray())}" +
-							$"&clean={HttpUtility.UrlEncode(((int)clean).ToString())}";
+						   $"&clean={HttpUtility.UrlEncode(((int)clean).ToString())}";
 
 			try
 			{
@@ -151,7 +152,8 @@ namespace BlockWorks.ClientCloner
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"Unable to clean {relUrl} (maybe the service is down) \n\t{ex.Message} - {ex.StackTrace}");
+				Console.WriteLine(
+					$"Unable to clean {relUrl} (maybe the service is down) \n\t{ex.Message} - {ex.StackTrace}");
 
 				await Save(data, relUrl);
 			}
@@ -168,29 +170,29 @@ namespace BlockWorks.ClientCloner
 			if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
 
 			using (var fs = File.OpenWrite(fullPath))
+			{
 				await ms.CopyToAsync(fs);
+			}
 		}
 
 		private Task<IEnumerable<string>> AwkwardParse(string input, string begin, string end, char splitBy)
 		{
 			var data = input.Split(begin);
-			for (int i = 1; i < data.Length; i++)
+			for (var i = 1; i < data.Length; i++)
 				data[i] = begin + data[i].Split(end)[0] + end;
 
 			var res = new List<string>();
 
 			foreach (var i in data)
-			{
 				if (i.Contains(begin))
 					res.AddRange(GetUrls(i, splitBy));
-			}
 
 			return Task.FromResult<IEnumerable<string>>(res);
 		}
 
 		private async Task<MemoryStream> Post(string url, string postdata)
 		{
-			var wr = HttpWebRequest.CreateHttp(url);
+			var wr = WebRequest.CreateHttp(url);
 
 			wr.Method = "POST";
 			wr.ContentLength = postdata.Length;
@@ -212,7 +214,9 @@ namespace BlockWorks.ClientCloner
 
 			using (var r = await wr.GetResponseAsync())
 			using (var s = r.GetResponseStream())
+			{
 				await s.CopyToAsync(ms);
+			}
 
 			Console.WriteLine($"[POST] Posted to {url} (resp. len: {ms.Length})");
 
@@ -222,7 +226,7 @@ namespace BlockWorks.ClientCloner
 
 		private async Task<MemoryStream> Get(string url)
 		{
-			var wr = HttpWebRequest.CreateHttp(url);
+			var wr = WebRequest.CreateHttp(url);
 
 			wr.Method = "GET";
 
@@ -234,7 +238,9 @@ namespace BlockWorks.ClientCloner
 
 			using (var r = await wr.GetResponseAsync())
 			using (var s = r.GetResponseStream())
+			{
 				await s.CopyToAsync(ms);
+			}
 
 			Console.WriteLine($"[GET] Downloaded {url}");
 
@@ -246,7 +252,7 @@ namespace BlockWorks.ClientCloner
 			var spl = s.Split(splitChar);
 			var er = new string[(spl.Length - 1) / 2];
 
-			for (int i = 1; i < spl.Length; i += 2)
+			for (var i = 1; i < spl.Length; i += 2)
 				er[(i - 1) / 2] = spl[i];
 
 			return er;

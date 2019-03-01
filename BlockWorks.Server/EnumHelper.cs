@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BlockWorks.Server
+﻿namespace BlockWorks.Server
 {
 	public static class EnumHelper
 	{
-		public static string ToFriendlyName(this WorldColor wc)
-			=> $"{wc} World";
-			// => _friendlyName[wc];
+		public static string ToFriendlyName(this WorldColor wc) => $"{wc} World";
+
+		// => _friendlyName[wc];
 
 		/*
 
