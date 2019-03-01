@@ -1,0 +1,18 @@
+NAMESPACE block_works.models;
+
+join:
+| (0) R I player_id
+| (1) R S account_id
+| (2) R S username
+| (3) R UI avatar_id
+| (4) R I staff_rank
+| (5) R FLOAT x_position
+| (6) R FLOAT y_position
+
+block:
+| (0) R I id
+| (1) R UI position
+
+fly:
+| (0) R I player_id
+| (1) R B fly_state
