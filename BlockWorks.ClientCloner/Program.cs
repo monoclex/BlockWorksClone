@@ -21,7 +21,7 @@ namespace BlockWorks.ClientCloner
 	internal class Program
 	{
 		public const string BlockWorksURL = "https://blockworks.lightwolfstudios.com/game";
-		public const string BeautifierURL = "[REDACTED]";
+		public const string BeautifierURL = "http://localhost:3000/";
 
 		private static Task Main() => new Program().MainAsync();
 
